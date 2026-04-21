@@ -1,40 +1,30 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 function DetailPage({ saved, dispatch }) {
     const { barcode } = useParams();
-    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await axios.get(
-                `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`
-            );
-            setProduct(res.data.product);
-        };
-
-        fetchData();
+        fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`)
+            .then((res) => res.json())
+            .then((data) => setProduct(data.product));
     }, [barcode]);
 
     if (!product) return <p>Loading...</p>;
 
-    const isSaved = saved.some((p) => p.code === barcode);
+    const isSaved = saved.find((item) => item.code === product.code);
 
     return (
         <div>
-            <button onClick={() => navigate(-1)}>Back</button>
-
             <h2>{product.product_name}</h2>
+            <p>{product.brands}</p>
 
             <button
                 onClick={() =>
-                    dispatch({
-                        type: isSaved ? "REMOVE" : "ADD",
-                        product: product,
-                        code: barcode,
-                    })
+                    isSaved
+                        ? dispatch({ type: "REMOVE", code: product.code })
+                        : dispatch({ type: "ADD", product })
                 }
             >
                 {isSaved ? "Remove" : "Save"}

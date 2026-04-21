@@ -1,8 +1,4 @@
-import { useNavigate } from "react-router-dom";
-
-function SavedPage({ saved, dispatch }) {
-    const navigate = useNavigate();
-
+function SavedPage({ saved }) {
     return (
         <div>
             <h2>Saved Items</h2>
@@ -11,19 +7,8 @@ function SavedPage({ saved, dispatch }) {
 
             {saved.map((item) => (
                 <div key={item.code}>
-                    <p>{item.product_name}</p>
-
-                    <button onClick={() => navigate(`/product/${item.code}`)}>
-                        View
-                    </button>
-
-                    <button
-                        onClick={() =>
-                            dispatch({ type: "REMOVE", code: item.code })
-                        }
-                    >
-                        Remove
-                    </button>
+                    <h3>{item.product_name}</h3>
+                    <p>{item.brands}</p>
                 </div>
             ))}
         </div>
