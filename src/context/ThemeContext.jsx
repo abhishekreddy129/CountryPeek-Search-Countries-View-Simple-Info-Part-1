@@ -4,7 +4,8 @@ import {
     useState,
 } from "react";
 
-const ThemeContext = createContext();
+const ThemeContext =
+    createContext();
 
 export function ThemeProvider({
     children,
@@ -31,7 +32,10 @@ export function ThemeProvider({
 
     return (
         <ThemeContext.Provider
-            value={{ theme, toggleTheme }}
+            value={{
+                theme,
+                toggleTheme,
+            }}
         >
             {children}
         </ThemeContext.Provider>
@@ -39,5 +43,7 @@ export function ThemeProvider({
 }
 
 export function useTheme() {
-    return useContext(ThemeContext);
+    return useContext(
+        ThemeContext
+    );
 }

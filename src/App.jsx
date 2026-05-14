@@ -7,6 +7,7 @@ import {
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import CountryPage from "./pages/CountryPage";
+import Favourites from "./pages/Favourites";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -28,9 +29,7 @@ function App() {
 
           <Route
             path="/favourites"
-            element={
-              <div>Favourites Page</div>
-            }
+            element={<Favourites />}
           />
 
           <Route

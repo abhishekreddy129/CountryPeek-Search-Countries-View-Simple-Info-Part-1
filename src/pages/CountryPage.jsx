@@ -1,140 +1,96 @@
+import { Link } from "react-router-dom";
+
 import {
-    useParams,
-    useNavigate,
-} from "react-router-dom";
+    useFavourites,
+} from "../context/FavouritesContext";
 
-import useCountry from "../hooks/useCountry";
-import "../styles/App.css";
-
-function CountryPage() {
-    const { code } = useParams();
-
-    const navigate = useNavigate();
-
-    const { country, loading, error } =
-        useCountry(code);
-
-    if (loading) {
-        return (
-            <p className="page-status">
-                Loading...
-            </p>
-        );
-    }
-
-    if (error) {
-        return (
-            <p className="page-status page-status--error">
-                {error}
-            </p>
-        );
-    }
-
-    if (!country) return null;
-
+function CountryCard({
+    country,
+}) {
     const {
-        name,
-        flags,
-        population,
-        region,
-        subregion,
-        capital,
-        languages,
-        currencies,
-        borders,
-    } = country;
+        favourites,
+        dispatch,
+    } = useFavourites();
 
-    const languageList = languages
-        ? Object.values(languages)
-        : [];
+    const isSaved =
+        favourites.some(
+            (fav) =>
+                fav.cca3 ===
+                country.cca3
+        );
 
-    const currencyList = currencies
-        ? Object.values(currencies).map(
-            (c) => c.name
-        )
-        : [];
+    function handleFavourite(
+        e
+    ) {
+        e.stopPropagation();
+
+        if (isSaved) {
+            dispatch({
+                type: "REMOVE_FAVOURITE",
+                payload: country.cca3,
+            });
+        } else {
+            dispatch({
+                type: "ADD_FAVOURITE",
+                payload: country,
+            });
+        }
+    }
 
     return (
-        <div className="country-page">
-            <button
-                className="back-btn"
-                onClick={() => navigate(-1)}
-            >
-                Back
-            </button>
+        <Link
+            to={`/country/${country.cca3}`}
+            className="card"
+        >
+            <img
+                src={
+                    country.flags.svg
+                }
+                alt={
+                    country.name.common
+                }
+                className="card__flag"
+            />
 
-            <div className="country-page__layout">
-                <img
-                    src={flags.svg}
-                    alt={name.common}
-                    className="country-page__flag"
-                />
+            <div className="card__body">
+                <h2>
+                    {
+                        country.name.common
+                    }
+                </h2>
 
-                <div className="country-page__info">
-                    <h2 className="country-page__name">
-                        {name.common}
-                    </h2>
+                <p>
+                    Population:{" "}
+                    {country.population.toLocaleString()}
+                </p>
 
-                    <p className="country-page__official">
-                        {name.official}
-                    </p>
+                <p>
+                    Region:{" "}
+                    {country.region}
+                </p>
 
-                    <div className="country-page__details">
-                        <div>
-                            <p>
-                                <strong>Population:</strong>{" "}
-                                {population.toLocaleString()}
-                            </p>
+                <p>
+                    Capital:{" "}
+                    {country.capital?.[0] ||
+                        "N/A"}
+                </p>
 
-                            <p>
-                                <strong>Region:</strong>{" "}
-                                {region}
-                            </p>
-
-                            <p>
-                                <strong>Subregion:</strong>{" "}
-                                {subregion}
-                            </p>
-
-                            <p>
-                                <strong>Capital:</strong>{" "}
-                                {capital?.[0] ?? "N/A"}
-                            </p>
-                        </div>
-
-                        <div>
-                            <p>
-                                <strong>Languages:</strong>{" "}
-                                {languageList.join(", ")}
-                            </p>
-
-                            <p>
-                                <strong>Currencies:</strong>{" "}
-                                {currencyList.join(", ")}
-                            </p>
-                        </div>
-                    </div>
-
-                    {borders && borders.length > 0 && (
-                        <div>
-                            <h4>Border Countries:</h4>
-
-                            <div>
-                                {borders.map((border) => (
-                                    <span
-                                        key={border}
-                                        className="border-badge"
-                                    >
-                                        {border}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
+                <button
+                    className={`fav-btn ${isSaved
+                            ? "fav-btn--saved"
+                            : ""
+                        }`}
+                    onClick={
+                        handleFavourite
+                    }
+                >
+                    {isSaved
+                        ? "♥ Saved"
+                        : "♡ Save"}
+                </button>
             </div>
-        </div>
+        </Link>
     );
 }
 
-export default CountryPage;
+export default CountryCard;
