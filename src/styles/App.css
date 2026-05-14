@@ -126,3 +126,19 @@ body,
 .border-badge {
     border: 1px solid var(--input-border);
 }
+
+.fav-btn {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.fav-btn--saved {
+    color: crimson;
+    font-weight: bold;
+}
