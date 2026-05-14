@@ -76,3 +76,53 @@
         grid-template-columns: 1fr;
     }
 }
+
+.filter-bar {
+    display: flex;
+    gap: 16px;
+    padding: 0 20px 20px;
+}
+
+.filter-bar select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.theme-toggle {
+    padding: 8px 14px;
+    border: 1px solid white;
+    border-radius: 6px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+body,
+.card,
+.country-page,
+.back-btn,
+.border-badge,
+.search-bar__input {
+    background-color: var(--card-bg);
+    color: var(--text);
+}
+
+.header {
+    background-color: var(--header-bg);
+}
+
+.search-bar__input {
+    border: 1px solid var(--input-border);
+}
+
+.back-btn {
+    border: 1px solid var(--input-border);
+}
+
+.border-badge {
+    border: 1px solid var(--input-border);
+}
