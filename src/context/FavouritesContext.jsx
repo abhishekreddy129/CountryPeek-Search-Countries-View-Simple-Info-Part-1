@@ -1,41 +1,29 @@
 import {
     createContext,
-    useReducer,
-    useEffect,
     useContext,
+    useEffect,
+    useReducer,
 } from "react";
 
-const FavouritesContext =
-    createContext();
+const FavouritesContext = createContext();
 
-function favouritesReducer(
-    state,
-    action
-) {
+function favouritesReducer(state, action) {
     switch (action.type) {
         case "ADD_FAVOURITE": {
-            const alreadySaved =
-                state.some(
-                    (country) =>
-                        country.cca3 ===
-                        action.payload.cca3
-                );
+            const exists = state.some(
+                (country) =>
+                    country.cca3 === action.payload.cca3
+            );
 
-            if (alreadySaved) {
-                return state;
-            }
+            if (exists) return state;
 
-            return [
-                ...state,
-                action.payload,
-            ];
+            return [...state, action.payload];
         }
 
         case "REMOVE_FAVOURITE":
             return state.filter(
                 (country) =>
-                    country.cca3 !==
-                    action.payload
+                    country.cca3 !== action.payload
             );
 
         default:
@@ -46,18 +34,17 @@ function favouritesReducer(
 export function FavouritesProvider({
     children,
 }) {
-    const savedFavourites =
-        JSON.parse(
-            localStorage.getItem(
+    const [favourites, dispatch] = useReducer(
+        favouritesReducer,
+        [],
+        () => {
+            const saved = localStorage.getItem(
                 "favourites"
-            ) || "[]"
-        );
+            );
 
-    const [favourites, dispatch] =
-        useReducer(
-            favouritesReducer,
-            savedFavourites
-        );
+            return saved ? JSON.parse(saved) : [];
+        }
+    );
 
     useEffect(() => {
         localStorage.setItem(
@@ -66,11 +53,26 @@ export function FavouritesProvider({
         );
     }, [favourites]);
 
+    function addFavourite(country) {
+        dispatch({
+            type: "ADD_FAVOURITE",
+            payload: country,
+        });
+    }
+
+    function removeFavourite(code) {
+        dispatch({
+            type: "REMOVE_FAVOURITE",
+            payload: code,
+        });
+    }
+
     return (
         <FavouritesContext.Provider
             value={{
                 favourites,
-                dispatch,
+                addFavourite,
+                removeFavourite,
             }}
         >
             {children}
@@ -79,7 +81,5 @@ export function FavouritesProvider({
 }
 
 export function useFavourites() {
-    return useContext(
-        FavouritesContext
-    );
+    return useContext(FavouritesContext);
 }

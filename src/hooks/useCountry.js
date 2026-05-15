@@ -1,9 +1,17 @@
-import { useState, useEffect } from "react";
+import {
+    useState,
+    useEffect,
+} from "react";
 
 function useCountry(code) {
-    const [country, setCountry] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [country, setCountry] =
+        useState(null);
+
+    const [loading, setLoading] =
+        useState(true);
+
+    const [error, setError] =
+        useState(null);
 
     useEffect(() => {
         if (!code) return;
@@ -11,10 +19,14 @@ function useCountry(code) {
         setLoading(true);
         setError(null);
 
-        fetch(`https://restcountries.com/v3.1/alpha/${code}`)
+        fetch(
+            `https://restcountries.com/v3.1/alpha/${code}`
+        )
             .then((res) => {
                 if (!res.ok) {
-                    throw new Error("Country not found");
+                    throw new Error(
+                        "Country not found"
+                    );
                 }
 
                 return res.json();
@@ -30,7 +42,11 @@ function useCountry(code) {
             });
     }, [code]);
 
-    return { country, loading, error };
+    return {
+        country,
+        loading,
+        error,
+    };
 }
 
 export default useCountry;
