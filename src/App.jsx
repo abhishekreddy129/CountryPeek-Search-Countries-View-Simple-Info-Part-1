@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Header />
 
-      <main>
+      <main className="container">
         <Routes>
           <Route
             path="/"
